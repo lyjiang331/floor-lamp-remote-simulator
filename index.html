@@ -74,10 +74,17 @@
             <div class="control-group">
               <span class="control-label">Light color</span>
               <div class="paired-buttons temperature-buttons">
-                <button id="warmerButton" type="button">Warm</button>
-                <button id="coolerButton" type="button">Cool</button>
+                <button class="temperature-button" type="button" data-temperature="warm">
+                  <i aria-hidden="true"></i>Warm
+                </button>
+                <button class="temperature-button" type="button" data-temperature="neutral">
+                  <i aria-hidden="true"></i>Neutral
+                </button>
+                <button class="temperature-button" type="button" data-temperature="cool">
+                  <i aria-hidden="true"></i>Cool
+                </button>
               </div>
-              <small>2700K warm ↔ 6500K cool</small>
+              <small>See the lamp and room shift from 2700K → 4500K → 6500K</small>
             </div>
           </div>
 
@@ -93,7 +100,7 @@
               <span aria-hidden="true">▤</span><strong>Study</strong><small>80% · neutral</small>
             </button>
             <button class="preset-button" type="button" data-mode="K">
-              <span aria-hidden="true">K</span><strong>K mode</strong><small>60% · warm white</small>
+              <span aria-hidden="true">K</span><strong>K mode</strong><small>60% · neutral white</small>
             </button>
             <button class="preset-button" type="button" data-mode="Baby">
               <span aria-hidden="true">●</span><strong>Baby</strong><small>30% · soft warm</small>

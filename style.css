@@ -217,8 +217,16 @@ h1 span { color: var(--green); font-style: italic; }
 }
 .paired-buttons button:hover, .preset-button:hover { transform: translateY(-2px); border-color: var(--green); }
 .paired-buttons button { min-height: 46px; border-radius: 12px; font-weight: 800; }
-.temperature-buttons button:first-child { background: #fff3dd; }
-.temperature-buttons button:last-child { background: #edf6ff; }
+.temperature-buttons { grid-template-columns: repeat(3, 1fr); }
+.temperature-button { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.temperature-button i { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 9px currentColor; }
+.temperature-button[data-temperature="warm"] { color: #8a551d; background: #fff0d5; }
+.temperature-button[data-temperature="warm"] i { background: #ffb84d; }
+.temperature-button[data-temperature="neutral"] { color: #6c633b; background: #fffbe8; }
+.temperature-button[data-temperature="neutral"] i { background: #fff0b7; }
+.temperature-button[data-temperature="cool"] { color: #315c82; background: #eaf5ff; }
+.temperature-button[data-temperature="cool"] i { background: #a7d6ff; }
+.temperature-button.active { border-color: currentColor; box-shadow: inset 0 0 0 1px currentColor; }
 
 .presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin: 0; padding: 0; border: 0; }
 .presets legend { margin-bottom: 9px; font-size: .78rem; font-weight: 800; }

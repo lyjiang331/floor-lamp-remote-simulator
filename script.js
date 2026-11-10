@@ -1,7 +1,7 @@
 // These variables are the appliance's current state.
 let isOn = false;
 let brightness = 50;
-let temperatureIndex = 2;
+let temperatureIndex = 1;
 let currentMode = "Custom";
 let timerIsSet = false;
 let timerSecondsRemaining = 60 * 60;
@@ -10,10 +10,8 @@ let timerIntervalId = null;
 // The remote moves through a fixed set of color-temperature states.
 const temperatures = [
   { kelvin: 2700, label: "Warm yellow", color: "#ffc86e" },
-  { kelvin: 3500, label: "Warm white", color: "#ffdca0" },
   { kelvin: 4500, label: "Neutral white", color: "#fff0c8" },
-  { kelvin: 5500, label: "Cool white", color: "#e6f2ff" },
-  { kelvin: 6500, label: "Daylight", color: "#cfe6ff" }
+  { kelvin: 6500, label: "Cool daylight", color: "#cfe6ff" }
 ];
 
 const room = document.querySelector("#room");
@@ -33,7 +31,7 @@ const branchCustom = document.querySelector("#branchCustom");
 const branchTimerOn = document.querySelector("#branchTimerOn");
 const branchTimerOff = document.querySelector("#branchTimerOff");
 const stateControlButtons = document.querySelectorAll(
-  "#brightnessDown, #brightnessUp, #warmerButton, #coolerButton, .preset-button, #timerButton"
+  "#brightnessDown, #brightnessUp, .temperature-button, .preset-button, #timerButton"
 );
 
 function showMessage(text) {
@@ -104,6 +102,10 @@ function renderLamp() {
     button.classList.toggle("active", isOn && button.dataset.mode === currentMode);
   });
 
+  document.querySelectorAll(".temperature-button").forEach(function (button, index) {
+    button.classList.toggle("active", isOn && index === temperatureIndex);
+  });
+
   timerStatus.textContent = timerIsSet && isOn ? formatTime(timerSecondsRemaining) : "Timer off";
   timerButtonState.textContent = timerIsSet
     ? `Cancel · ${formatTime(timerSecondsRemaining)}`
@@ -143,21 +145,17 @@ function changeBrightness(amount) {
   renderLamp();
 }
 
-function changeTemperature(direction) {
-  const nextIndex = temperatureIndex + direction;
-
-  if (nextIndex < 0) {
+function setTemperature(level) {
+  if (level === "warm") {
     temperatureIndex = 0;
-    showMessage("This is the warmest color setting.");
-  } else if (nextIndex >= temperatures.length) {
-    temperatureIndex = temperatures.length - 1;
-    showMessage("This is the coolest color setting.");
-  } else {
-    temperatureIndex = nextIndex;
-    currentMode = "Custom";
-    showMessage(`Color changed to ${temperatures[temperatureIndex].label}.`);
+  } else if (level === "neutral") {
+    temperatureIndex = 1;
+  } else if (level === "cool") {
+    temperatureIndex = 2;
   }
 
+  currentMode = "Custom";
+  showMessage(`Color changed to ${temperatures[temperatureIndex].label}.`);
   renderLamp();
 }
 
@@ -165,13 +163,13 @@ function changeTemperature(direction) {
 function applyPreset(mode) {
   if (mode === "Office") {
     brightness = 100;
-    temperatureIndex = 4;
+    temperatureIndex = 2;
   } else if (mode === "Sleep") {
     brightness = 10;
     temperatureIndex = 0;
   } else if (mode === "Study") {
     brightness = 80;
-    temperatureIndex = 2;
+    temperatureIndex = 1;
   } else if (mode === "K") {
     brightness = 60;
     temperatureIndex = 1;
@@ -218,11 +216,10 @@ document.querySelector("#brightnessDown").addEventListener("click", function () 
 document.querySelector("#brightnessUp").addEventListener("click", function () {
   changeBrightness(10);
 });
-document.querySelector("#warmerButton").addEventListener("click", function () {
-  changeTemperature(-1);
-});
-document.querySelector("#coolerButton").addEventListener("click", function () {
-  changeTemperature(1);
+document.querySelectorAll(".temperature-button").forEach(function (button) {
+  button.addEventListener("click", function () {
+    setTemperature(button.dataset.temperature);
+  });
 });
 timerButton.addEventListener("click", toggleTimer);
 

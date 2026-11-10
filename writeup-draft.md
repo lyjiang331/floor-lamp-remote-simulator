@@ -16,11 +16,11 @@ The main states are:
 
 - Power: on or off
 - Brightness: 10% to 100%
-- Color temperature: five steps from 2700K warm yellow to 6500K cool daylight
+- Color temperature: Warm (2700K), Neutral (4500K), or Cool (6500K)
 - Mode: Custom, Office, Sleep, Study, K, or Baby
 - One-hour timer: set or off
 
-When the lamp is off, the adjustment buttons are disabled because the real lamp cannot show changes while it is off. When the lamp is on, the brightness buttons change the value in 10% steps, and the Warm and Cool buttons move through the five color-temperature states. Each quick mode changes brightness and color at the same time. For example, Sleep mode uses a very dim warm light, while Office mode uses a bright cool light.
+When the lamp is off, the adjustment buttons are disabled because the real lamp cannot show changes while it is off. When the lamp is on, the brightness buttons change the value in 10% steps, and the Warm, Neutral, and Cool buttons select one of three color-temperature states. The model stores an ordered numeric index but maps it to a descriptive string, Kelvin value, and visible light color. Each quick mode changes brightness and color at the same time. For example, Sleep mode uses a very dim warm light, while Office mode uses a bright cool light.
 
 ## Process write-up
 
