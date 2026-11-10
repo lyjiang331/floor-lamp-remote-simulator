@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="An interactive state-based model of a floor lamp remote control.">
+    <title>Floor Lamp Remote Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">Interactive appliance study</p>
+        <h1 id="page-title">Floor Lamp<br><span>Remote Simulator</span></h1>
+        <p class="lede">
+          A rough model of the remote I use to move my floor lamp from cool white
+          to warm yellow and adjust its brightness.
+        </p>
+
+        <figure class="inspiration-card">
+          <img src="remote-inspiration.jpg" alt="Black remote control for my floor lamp">
+          <figcaption>My actual floor lamp remote — the inspiration for this model.</figcaption>
+        </figure>
+
+        <div class="logic-note">
+          <p class="eyebrow">The logic I wanted to test</p>
+          <p>Flexible controls adjust brightness and color, five shortcuts change multiple states at once, and a timer supports automatic shutoff.</p>
+        </div>
+      </section>
+
+      <section class="simulator" aria-label="Interactive floor lamp simulator">
+        <div class="room" id="room">
+          <div class="status-row">
+            <span class="power-status" id="powerStatus"><i></i> Lamp off</span>
+            <span id="timerStatus">Timer off</span>
+          </div>
+
+          <div class="lamp" aria-hidden="true">
+            <div class="light-cone" id="lightCone"></div>
+            <div class="lamp-shade" id="lampShade"></div>
+            <div class="lamp-pole"></div>
+            <div class="lamp-base"></div>
+          </div>
+
+          <div class="readout" aria-live="polite">
+            <div><span>Brightness</span><strong id="brightnessReadout">—</strong></div>
+            <div><span>Color temperature</span><strong id="temperatureReadout">—</strong></div>
+            <div><span>Mode</span><strong id="modeReadout">Off</strong></div>
+          </div>
+        </div>
+
+        <div class="remote-panel">
+          <div class="remote-heading">
+            <div>
+              <p class="eyebrow">Remote controls</p>
+              <h2>Change the lamp state</h2>
+            </div>
+            <button class="power-button" id="powerButton" type="button" aria-pressed="false">
+              <span aria-hidden="true">⏻</span> Power
+            </button>
+          </div>
+
+          <div class="control-grid">
+            <div class="control-group">
+              <span class="control-label">Brightness</span>
+              <div class="paired-buttons">
+                <button id="brightnessDown" type="button" aria-label="Decrease brightness">−</button>
+                <button id="brightnessUp" type="button" aria-label="Increase brightness">＋</button>
+              </div>
+              <small>Changes in 10% steps</small>
+            </div>
+
+            <div class="control-group">
+              <span class="control-label">Light color</span>
+              <div class="paired-buttons temperature-buttons">
+                <button id="warmerButton" type="button">Warm</button>
+                <button id="coolerButton" type="button">Cool</button>
+              </div>
+              <small>2700K warm ↔ 6500K cool</small>
+            </div>
+          </div>
+
+          <fieldset class="presets">
+            <legend>Quick modes</legend>
+            <button class="preset-button" type="button" data-mode="Office">
+              <span aria-hidden="true">▣</span><strong>Office</strong><small>100% · cool</small>
+            </button>
+            <button class="preset-button" type="button" data-mode="Sleep">
+              <span aria-hidden="true">☾</span><strong>Sleep</strong><small>10% · warm</small>
+            </button>
+            <button class="preset-button" type="button" data-mode="Study">
+              <span aria-hidden="true">▤</span><strong>Study</strong><small>80% · neutral</small>
+            </button>
+            <button class="preset-button" type="button" data-mode="K">
+              <span aria-hidden="true">K</span><strong>K mode</strong><small>60% · warm white</small>
+            </button>
+            <button class="preset-button" type="button" data-mode="Baby">
+              <span aria-hidden="true">●</span><strong>Baby</strong><small>30% · soft warm</small>
+            </button>
+          </fieldset>
+
+          <button class="timer-button" id="timerButton" type="button" aria-pressed="false">
+            <span><strong>1H</strong> auto-off timer</span>
+            <span id="timerButtonState">Set timer</span>
+          </button>
+
+          <p class="message" id="message" aria-live="polite">Press Power to turn on the lamp.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
