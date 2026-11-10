@@ -34,7 +34,7 @@ I modeled a transition as a user action that changes one or more variables. Pres
 
 ### How control flow helped
 
-`if` and `else if` statements let the simulator behave differently depending on its state. They prevent brightness from going above 100% or below 10%. They also assign different brightness and color values to each preset. This made the model feel more like a real appliance rather than a group of unrelated buttons.
+`if` and `else if` statements let the simulator behave differently depending on its state. They prevent brightness from going above 100% or below 10%. They also assign different brightness and color values to each preset. I added a Live Logic panel that highlights the branch currently running, so the relationship between `if`, `else if`, and `else` is visible instead of hidden inside the code. This made the model feel more like a real appliance rather than a group of unrelated buttons.
 
 ### How AI helped
 
@@ -42,7 +42,7 @@ I used Codex as a thinking and coding partner. I first described the basic idea 
 
 ### What I tried, tested, and revised
 
-The starting files only had sample buttons that changed text and background colors. I replaced that example with a complete lamp state model. I tested the sequence of turning the lamp on, raising brightness, choosing Baby mode, and setting the one-hour timer. The state readout changed from 50% to 60%, then Baby mode changed it to 30% and 2700K warm yellow. The timer label also changed to show that the one-hour timer was active.
+The starting files only had sample buttons that changed text and background colors. I replaced that example with a complete lamp state model. I tested the sequence of turning the lamp on, raising brightness, choosing Baby mode, and setting the one-hour timer. The state readout changed from 50% to 60%, then Baby mode changed it to 30% and 2700K warm yellow. I revised the first timer version because it only changed a label. The final version starts a real countdown at `01:00:00`, subtracts one second at a time, and uses a nested `if` statement to turn the lamp off when the remaining time reaches zero.
 
 One useful lesson was that a shortcut button is not a completely separate kind of logic. It is a convenient way to change several existing state variables together. I also learned that interface feedback matters: without the percentage, Kelvin value, active-mode outline, and status message, it would be difficult to know whether the logic worked.
 

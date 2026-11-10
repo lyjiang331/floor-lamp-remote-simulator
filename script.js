@@ -4,6 +4,8 @@ let brightness = 50;
 let temperatureIndex = 2;
 let currentMode = "Custom";
 let timerIsSet = false;
+let timerSecondsRemaining = 60 * 60;
+let timerIntervalId = null;
 
 // The remote moves through a fixed set of color-temperature states.
 const temperatures = [
@@ -24,12 +26,54 @@ const timerStatus = document.querySelector("#timerStatus");
 const timerButton = document.querySelector("#timerButton");
 const timerButtonState = document.querySelector("#timerButtonState");
 const message = document.querySelector("#message");
+const logicResult = document.querySelector("#logicResult");
+const branchPowerOff = document.querySelector("#branchPowerOff");
+const branchPreset = document.querySelector("#branchPreset");
+const branchCustom = document.querySelector("#branchCustom");
+const branchTimerOn = document.querySelector("#branchTimerOn");
+const branchTimerOff = document.querySelector("#branchTimerOff");
 const stateControlButtons = document.querySelectorAll(
   "#brightnessDown, #brightnessUp, #warmerButton, #coolerButton, .preset-button, #timerButton"
 );
 
 function showMessage(text) {
   message.textContent = text;
+}
+
+function formatTime(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return [hours, minutes, seconds]
+    .map(function (number) { return String(number).padStart(2, "0"); })
+    .join(":");
+}
+
+function stopTimer(resetTime) {
+  clearInterval(timerIntervalId);
+  timerIntervalId = null;
+  timerIsSet = false;
+
+  if (resetTime) {
+    timerSecondsRemaining = 60 * 60;
+  }
+}
+
+function renderLogic() {
+  const presetIsActive = isOn && currentMode !== "Custom";
+  branchPowerOff.classList.toggle("active", !isOn);
+  branchPreset.classList.toggle("active", presetIsActive);
+  branchCustom.classList.toggle("active", isOn && !presetIsActive);
+  branchTimerOn.classList.toggle("active", isOn && timerIsSet);
+  branchTimerOff.classList.toggle("active", !timerIsSet);
+
+  if (!isOn) {
+    logicResult.textContent = "IF → power is off";
+  } else if (presetIsActive) {
+    logicResult.textContent = `ELSE IF → ${currentMode} preset`;
+  } else {
+    logicResult.textContent = "ELSE → custom control";
+  }
 }
 
 // One render function keeps all visual feedback synchronized with the state.
@@ -60,9 +104,12 @@ function renderLamp() {
     button.classList.toggle("active", isOn && button.dataset.mode === currentMode);
   });
 
-  timerStatus.textContent = timerIsSet && isOn ? "1H timer set" : "Timer off";
-  timerButtonState.textContent = timerIsSet ? "Cancel timer" : "Set timer";
+  timerStatus.textContent = timerIsSet && isOn ? formatTime(timerSecondsRemaining) : "Timer off";
+  timerButtonState.textContent = timerIsSet
+    ? `Cancel · ${formatTime(timerSecondsRemaining)}`
+    : "Start 01:00:00";
   timerButton.setAttribute("aria-pressed", String(timerIsSet && isOn));
+  renderLogic();
 }
 
 function togglePower() {
@@ -71,7 +118,7 @@ function togglePower() {
   if (isOn) {
     showMessage("Lamp turned on. Try changing brightness, color, or mode.");
   } else {
-    timerIsSet = false;
+    stopTimer(true);
     showMessage("Lamp turned off. Other controls are now disabled.");
   }
 
@@ -139,12 +186,27 @@ function applyPreset(mode) {
 }
 
 function toggleTimer() {
-  timerIsSet = !timerIsSet;
-  showMessage(
-    timerIsSet
-      ? "The lamp is set to turn off after one hour (simulated)."
-      : "The auto-off timer was cancelled."
-  );
+  if (timerIsSet) {
+    stopTimer(true);
+    showMessage("ELSE branch: the running timer was cancelled and reset.");
+  } else {
+    timerIsSet = true;
+    timerSecondsRemaining = 60 * 60;
+    showMessage("IF branch: timer is on, so the countdown subtracts one second at a time.");
+
+    timerIntervalId = setInterval(function () {
+      timerSecondsRemaining = timerSecondsRemaining - 1;
+
+      if (timerSecondsRemaining <= 0) {
+        stopTimer(true);
+        isOn = false;
+        showMessage("Nested IF branch: time reached 00:00:00, so the lamp turned off.");
+      }
+
+      renderLamp();
+    }, 1000);
+  }
+
   renderLamp();
 }
 

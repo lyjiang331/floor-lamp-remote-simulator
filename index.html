@@ -105,6 +105,28 @@
             <span id="timerButtonState">Set timer</span>
           </button>
 
+          <section class="logic-panel" aria-labelledby="logic-title">
+            <div class="logic-heading">
+              <div>
+                <p class="eyebrow">Live logic</p>
+                <h3 id="logic-title">Which branch is running?</h3>
+              </div>
+              <span class="logic-result" id="logicResult">Waiting for power</span>
+            </div>
+
+            <div class="logic-code" aria-live="polite">
+              <div class="logic-block">
+                <p class="logic-line" id="branchPowerOff"><b>if</b> (power === off) → disable controls</p>
+                <p class="logic-line" id="branchPreset"><b>else if</b> (preset selected) → set brightness + color</p>
+                <p class="logic-line" id="branchCustom"><b>else</b> → apply one custom adjustment</p>
+              </div>
+              <div class="logic-block">
+                <p class="logic-line" id="branchTimerOn"><b>if</b> (1H timer === on) → subtract 1 second</p>
+                <p class="logic-line" id="branchTimerOff"><b>else</b> → timer waits</p>
+              </div>
+            </div>
+          </section>
+
           <p class="message" id="message" aria-live="polite">Press Power to turn on the lamp.</p>
         </div>
       </section>
